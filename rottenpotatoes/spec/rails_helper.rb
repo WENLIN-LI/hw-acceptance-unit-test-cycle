@@ -52,4 +52,17 @@ RSpec.configure do |config|
   # The different available types are documented in the features, such as in
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
+  
+  if RUBY_VERSION.to_f >= 2.6 && Rails::VERSION::MAJOR == 4
+    class ActionController::TestResponse
+      prepend Module.new {
+        def recycle!
+          # hack to avoid MonitorMixin double-initialize error:
+          @mon_mutex_owner_object_id = nil
+          @mon_mutex = nil
+          super
+        end
+      }
+    end
+  end
 end
