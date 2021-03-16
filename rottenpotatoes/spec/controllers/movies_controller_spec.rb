@@ -120,9 +120,10 @@ describe MoviesController do
     context 'when the specified movie has a director' do
       it 'pass similar movies to @movie' do
         get :same_director, id: @movie1.id
-        expect(assigns(:similar_movies)) == [@movie1,@movie2]
+        expect(assigns(:similar_movies)).to include(@movie2)
       end
       it 'renders the :similar view' do
+        @movie1 = FactoryGirl.create(:movie)
         get :same_director, id:  @movie1.id
         expect(response).to render_template(:same_director)
       end

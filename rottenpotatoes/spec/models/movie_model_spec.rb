@@ -2,21 +2,19 @@ require 'rails_helper'
 
 describe Movie do
   describe 'find_similar_movies' do
-    @movie1 = FactoryGirl.create(:movie)
-    @movie2 = FactoryGirl.create(:movie, title: 'similar', director: 'Frank Darabont')
-    @movie3 = FactoryGirl.create(:movie, title: 'not similar', director: 'Tom')
-    @movie4 = FactoryGirl.create(:movie, director: nil)
-    id = @movie1.id
-
     context 'when the specified movie has a director' do
       it 'finds similar movies correctly' do
-        expect(Movie.similar_movies(id)) == [@movie1,@movie2]
+        @movie1 = FactoryGirl.create(:movie)
+        @movie2 = FactoryGirl.create(:movie, title: 'similar', director: 'Frank Darabont')
+        expect(Movie.similar_movies(@movie2.id)).to include(@movie1)
       end
     end
 
     context 'when the specified movie has no director' do
       it 'handles sad path' do
-        expect(Movie.similar_movies(id)) == nil
+        @movie1 = FactoryGirl.create(:movie)
+        @movie3 = FactoryGirl.create(:movie, director: nil)
+        expect(Movie.similar_movies(@movie3.id)).to eq(nil)
       end
     end
     
